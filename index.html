@@ -2056,4 +2056,25 @@
       nav.classList.toggle('scrolled', window.scrollY > 60);
     });
 
-    // Make ALL fade-up elements visible immedia
+    // Reveal fade-up elements as they scroll into view.
+    // Fallback: if IntersectionObserver is unavailable, reveal everything at once
+    // so content is never left hidden.
+    var faders = document.querySelectorAll('.fade-up');
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function(entries, obs) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+      faders.forEach(function(el) { io.observe(el); });
+    } else {
+      faders.forEach(function(el) { el.classList.add('visible'); });
+    }
+  });
+
+</script>
+</body>
+</html>
